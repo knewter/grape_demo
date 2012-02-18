@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Backbone Cellar</title>
+    <link rel="stylesheet" href="/css/wine/styles.css" />
+  </head>
+
+  <body>
+
+    <div id="header"><span class="title">Backbone Cellar</span></div>
+
+    <div id="sidebar"></div>
+
+    <div id="content">
+      <h2>Welcome to Backbone Cellar</h2>
+      <p>
+      This is a sample application part of of three-part tutorial showing how to build a CRUD application with Backbone.js.
+      </p>
+    </div>
+
+    <!-- Templates -->
+    <script type="text/template" id="tpl-wine-list-item">
+      <a href='#wines/<%= _id %>'><%= name %></a>
+    </script>
+
+    <script type="text/template" id="tpl-wine-details">
+      <div class="form-left-col">
+        <label>Id:</label>
+        <input type="text" id="wineId" name="_id" value="<%= _id %>" disabled />
+        <label>Name:</label>
+        <input type="text" id="name" name="name" value="<%= name %>" required/>
+        <label>Grapes:</label>
+        <input type="text" id="grapes" name="grapes" value="<%= grapes %>"/>
+        <label>Country:</label>
+        <input type="text" id="country" name="country" value="<%= country %>"/>
+        <label>Region:</label>
+        <input type="text" id="region" name="region"  value="<%= region %>"/>
+        <label>Year:</label>
+        <input type="text" id="year" name="year"  value="<%= year %>"/>
+      </div>
+      <div class="form-right-col">
+        <img height="300" src="../pics/<%= picture %>"/>
+        <label>Notes:</label>
+        <textarea id="description" name="description"><%= description %></textarea>
+      </div>
+    </script>
+
+    <!-- JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+    <script src="/underscore.js"></script>
+    <script src="/backbone.js"></script>
+    <script src="/javascript/wine_app.js"></script>   
+  </body>
+</html>
