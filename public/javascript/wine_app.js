@@ -231,25 +231,20 @@
       };
 
       AppRouter.prototype.list = function() {
-        this.setup();
+        this.wineList = new WineCollection;
+        this.wineList.fetch();
+        this.wineListView = new WineListView({
+          model: this.wineList
+        });
         return $('#sidebar').html(this.wineListView.render().el);
       };
 
       AppRouter.prototype.wineDetails = function(id) {
-        this.setup();
         this.wine = this.wineList.get(id);
         this.wineView = new WineView({
           model: this.wine
         });
         return $('#content').html(this.wineView.render().el);
-      };
-
-      AppRouter.prototype.setup = function() {
-        this.wineList || (this.wineList = new WineCollection);
-        this.wineList.fetch();
-        return this.wineListView || (this.wineListView = new WineListView({
-          model: this.wineList
-        }));
       };
 
       return AppRouter;

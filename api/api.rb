@@ -17,9 +17,6 @@ module Acme
 
       desc "Update a wine"
       put ':id' do
-        STDOUT.puts "---"
-        STDOUT.puts "foo"
-        STDOUT.puts "---"
         wine = Wine.find(id)
         wine.update_attributes(params)
         wine

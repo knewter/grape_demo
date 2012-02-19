@@ -122,20 +122,15 @@ jQuery ->
       "wines/:id": "wineDetails"
 
     list: ->
-      @setup()
+      @wineList = new WineCollection
+      @wineList.fetch()
+      @wineListView = new WineListView(model: @wineList)
       $('#sidebar').html @wineListView.render().el
 
     wineDetails: (id) ->
-      @setup()
       @wine = @wineList.get id
       @wineView = new WineView model: @wine
       $('#content').html @wineView.render().el
-
-    setup: ->
-      @wineList ||= new WineCollection
-      @wineList.fetch()
-      @wineListView ||= new WineListView(model: @wineList)
-
 
   app = new AppRouter
   Backbone.history.start()
