@@ -5,6 +5,7 @@ gem "rack-contrib", :git => "https://github.com/rack/rack-contrib.git", :require
 gem "grape", :git => "http://github.com/intridea/grape.git", :branch => "frontier"
 gem "mongoid"
 gem "bson_ext"
+gem 'ruby-debug19'
 
 group :test do
   gem "rspec"
@@ -14,5 +15,3 @@ group :test do
   gem "rspec-mocks"
   gem "fabrication", :git => "https://github.com/paulelliott/fabrication.git"
 end
-
-

@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
  
-Bundler.require :default, ENV['RACK_ENV']
+env = ENV['RACK_ENV'] || 'development'
+Bundler.require :default, env
  
 # Load any initializers
 Dir["#{File.dirname(__FILE__)}/initializers/**/*.rb"].each { |f| require f }
