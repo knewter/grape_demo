@@ -3,7 +3,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   jQuery(function() {
-    var AppRouter, Wine, WineCollection, WineListItemView, WineListView, WineView, app;
+    var AppRouter, HeaderView, Wine, WineCollection, WineListItemView, WineListView, WineView, app;
     Wine = (function(_super) {
 
       __extends(Wine, _super);
@@ -11,6 +11,19 @@
       function Wine() {
         Wine.__super__.constructor.apply(this, arguments);
       }
+
+      Wine.prototype.urlRoot = '/api/v1/wines';
+
+      Wine.prototype.defaults = {
+        "id": null,
+        "name": "",
+        "grapes": "",
+        "country": "USA",
+        "region": "California",
+        "year": "",
+        "description": "",
+        "picture": ""
+      };
 
       return Wine;
 
@@ -41,8 +54,14 @@
       WineListView.prototype.tagname = 'ul';
 
       WineListView.prototype.initialize = function() {
+        var _this = this;
         _.bindAll(this);
-        return this.model.bind('reset', this.render);
+        this.model.bind('reset', this.render);
+        return this.model.bind('add', function(wine) {
+          return $(_this.el).append(new WineListItemView({
+            model: wine
+          }).render().el);
+        });
       };
 
       WineListView.prototype.render = function() {
@@ -71,7 +90,9 @@
       WineListItemView.prototype.tagName = 'li';
 
       WineListItemView.prototype.initialize = function() {
-        return _.bindAll(this);
+        _.bindAll(this);
+        this.model.bind('change', this.render);
+        return this.model.bind('destroy', this.close);
       };
 
       WineListItemView.prototype.template = _.template($('#tpl-wine-list-item').html());
@@ -79,6 +100,11 @@
       WineListItemView.prototype.render = function() {
         $(this.el).html(this.template(this.model.toJSON()));
         return this;
+      };
+
+      WineListItemView.prototype.close = function() {
+        $(this.el).unbind();
+        return $(this.el).remove();
       };
 
       return WineListItemView;
@@ -93,7 +119,8 @@
       }
 
       WineView.prototype.initialize = function() {
-        return _.bindAll(this);
+        _.bindAll(this);
+        return this.model.bind('change', this.render);
       };
 
       WineView.prototype.template = _.template($('#tpl-wine-details').html());
@@ -103,7 +130,87 @@
         return this;
       };
 
+      WineView.prototype.events = {
+        'change input': 'change',
+        'click .save': 'saveWine',
+        'click .delete': 'deleteWine'
+      };
+
+      WineView.prototype.change = function(event) {
+        var target;
+        target = event.target;
+        return console.log("Changing " + target.id + " from " + target.defaultVal);
+      };
+
+      WineView.prototype.saveWine = function() {
+        this.model.set({
+          name: $('#name').val(),
+          grapes: $('#grapes').val(),
+          country: $('#country').val(),
+          region: $('#region').val(),
+          year: $('#year').val(),
+          description: $('#description').val()
+        });
+        if (this.model.isNew()) {
+          app.wineList.create(this.model);
+        } else {
+          this.model.save();
+        }
+        return false;
+      };
+
+      WineView.prototype.deleteWine = function() {
+        this.model.destroy({
+          success: function() {
+            alert('Wine deleted successfully');
+            return window.history.back();
+          }
+        });
+        return false;
+      };
+
+      WineView.prototype.close = function() {
+        $(this.el).unbind();
+        return $(this.el).remove();
+      };
+
       return WineView;
+
+    })(Backbone.View);
+    HeaderView = (function(_super) {
+
+      __extends(HeaderView, _super);
+
+      function HeaderView() {
+        HeaderView.__super__.constructor.apply(this, arguments);
+      }
+
+      HeaderView.prototype.template = _.template($('#tpl-header').html());
+
+      HeaderView.prototype.initialize = function() {
+        _.bindAll(this);
+        return this.render();
+      };
+
+      HeaderView.prototype.render = function() {
+        $(this.el).html(this.template());
+        return this;
+      };
+
+      HeaderView.prototype.events = {
+        "click .new": "newWine"
+      };
+
+      HeaderView.prototype.newWine = function(event) {
+        if (app.wineView) app.wineView.close();
+        app.wineView = new WineView({
+          model: new Wine()
+        });
+        $('#content').html(app.wineView.render().el);
+        return false;
+      };
+
+      return HeaderView;
 
     })(Backbone.View);
     AppRouter = (function(_super) {
@@ -124,21 +231,25 @@
       };
 
       AppRouter.prototype.list = function() {
-        this.wineList = new WineCollection;
-        this.wineListView = new WineListView({
-          model: this.wineList
-        });
-        this.wineList.fetch();
+        this.setup();
         return $('#sidebar').html(this.wineListView.render().el);
       };
 
       AppRouter.prototype.wineDetails = function(id) {
-        window.wineList = this.wineList;
+        this.setup();
         this.wine = this.wineList.get(id);
         this.wineView = new WineView({
           model: this.wine
         });
         return $('#content').html(this.wineView.render().el);
+      };
+
+      AppRouter.prototype.setup = function() {
+        this.wineList || (this.wineList = new WineCollection);
+        this.wineList.fetch();
+        return this.wineListView || (this.wineListView = new WineListView({
+          model: this.wineList
+        }));
       };
 
       return AppRouter;

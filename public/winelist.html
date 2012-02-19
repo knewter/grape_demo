@@ -7,7 +7,7 @@
 
   <body>
 
-    <div id="header"><span class="title">Backbone Cellar</span></div>
+    <div id="header"><h1>Backbone Cellar</h1></div>
 
     <div id="sidebar"></div>
 
@@ -19,14 +19,20 @@
     </div>
 
     <!-- Templates -->
+    <script type="text/template" id="tpl-header">
+      <span class="title">Backbone Cellar</span>
+      <button class="new">New Wine</button>
+    </script>
+
     <script type="text/template" id="tpl-wine-list-item">
-      <a href='#wines/<%= _id %>'><%= name %></a>
+      <a href='#wines/<%= id %>'><%= name %></a>
     </script>
 
     <script type="text/template" id="tpl-wine-details">
+
       <div class="form-left-col">
         <label>Id:</label>
-        <input type="text" id="wineId" name="_id" value="<%= _id %>" disabled />
+        <input type="text" id="wineId" name="id" value="<%= id %>" disabled />
         <label>Name:</label>
         <input type="text" id="name" name="name" value="<%= name %>" required/>
         <label>Grapes:</label>
@@ -37,12 +43,16 @@
         <input type="text" id="region" name="region"  value="<%= region %>"/>
         <label>Year:</label>
         <input type="text" id="year" name="year"  value="<%= year %>"/>
+        <button class="save">Save</button>
+        <button class="delete">Delete</button>
       </div>
+
       <div class="form-right-col">
         <img height="300" src="../pics/<%= picture %>"/>
         <label>Notes:</label>
         <textarea id="description" name="description"><%= description %></textarea>
       </div>
+
     </script>
 
     <!-- JavaScript -->
