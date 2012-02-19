@@ -24,7 +24,7 @@ module Acme
       
       desc "Create a wine"
       post '/' do
-        wine = Wine.create!(params.except(:route_info, :version))
+        wine = Wine.create!(params.except(:route_info, :version, :_id, :id))
         wine.as_json
       end
     end
