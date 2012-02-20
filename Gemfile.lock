@@ -37,12 +37,27 @@ GEM
     bson_ext (1.5.2)
       bson (= 1.5.2)
     builder (3.0.0)
+    capybara (1.1.2)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      selenium-webdriver (~> 2.0)
+      xpath (~> 0.1.4)
+    childprocess (0.3.1)
+      ffi (~> 1.0.6)
+    colorize (0.5.8)
     columnize (0.3.6)
     diff-lcs (1.1.3)
+    ffi (1.0.11)
+    gherkin-ruby (0.1.0)
+      racc
+      rexical
     hashie (1.2.0)
     i18n (0.6.0)
     linecache19 (0.5.12)
       ruby_core_source (>= 0.1.4)
+    mime-types (1.17.2)
     mongo (1.5.2)
       bson (= 1.5.2)
     mongoid (2.4.4)
@@ -51,11 +66,14 @@ GEM
       tzinfo (~> 0.3.22)
     multi_json (1.0.4)
     multi_xml (0.4.1)
+    nokogiri (1.5.0)
+    racc (1.4.7)
     rack (1.4.1)
     rack-mount (0.8.3)
       rack (>= 1.0.0)
     rack-test (0.6.1)
       rack (>= 1.0)
+    rexical (1.0.5)
     rspec (2.8.0)
       rspec-core (~> 2.8.0)
       rspec-expectations (~> 2.8.0)
@@ -74,13 +92,25 @@ GEM
       ruby-debug-base19 (>= 0.11.19)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
+    rubyzip (0.9.6.1)
+    selenium-webdriver (2.19.0)
+      childprocess (>= 0.2.5)
+      ffi (~> 1.0.9)
+      multi_json (~> 1.0.4)
+      rubyzip
+    spinach (0.3.1)
+      colorize
+      gherkin-ruby (~> 0.1.0)
     tzinfo (0.3.31)
+    xpath (0.1.4)
+      nokogiri (~> 1.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   bson_ext
+  capybara
   fabrication!
   grape!
   mongoid
@@ -92,3 +122,4 @@ DEPENDENCIES
   rspec-expectations
   rspec-mocks
   ruby-debug19
+  spinach
