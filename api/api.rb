@@ -24,7 +24,6 @@ module Acme
       
       desc "Create a wine"
       post '/' do
-        require 'ruby-debug';debugger;true
         wine = Wine.create!(params['wine'])
         wine.as_json
       end
