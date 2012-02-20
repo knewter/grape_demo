@@ -14,6 +14,8 @@
         Wine.__super__.constructor.apply(this, arguments);
       }
 
+      Wine.prototype.name = 'wine';
+
       Wine.prototype.urlRoot = '/api/v1/wines';
 
       Wine.prototype.defaults = {

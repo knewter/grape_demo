@@ -1,7 +1,6 @@
 require File.expand_path('../config/environment', __FILE__)
 
 class App
-
   def initialize(options)
     @try = ['', *options.delete(:try)]
     @static = ::Rack::Static.new(
@@ -31,5 +30,3 @@ run App.new({
   :urls => %w[/],
   :try => ['.html', 'index.html', '/index.html']
   })
-
-

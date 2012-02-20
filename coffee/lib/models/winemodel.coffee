@@ -1,6 +1,7 @@
 console.log 'winemodel'
 jQuery ->
   window.Wine = class Wine extends Backbone.Model
+    name: 'wine'
     urlRoot: '/api/v1/wines'
     defaults:
       "id": null

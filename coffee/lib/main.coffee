@@ -5,55 +5,38 @@ jQuery ->
     @remove()
     @unbind()
 
-  # Extend Backbone.Model to support setting a namespace
-  # for models. Example response from server:
-  # {
-  #   'modelname' : {
-  #     ... attributes ...
-  #   }
-  # We dont want the attributes to be scoped by the model name
-  # in the models attributes property. This new parse function
-  # will drop the namespace if it is defined on the model.
-  # Example:
-  #
-  # SomeModel = Backbone.Model.extend({
-  #   namespace : 'someModel'
-  # });
-  _.extend Backbone.Model.prototype
-    parse: (resp, xhr) ->
-      ns = this.namespace
-      if(ns)
-        return resp[ns]
-      resp
+  ###
+  Usage:
+  * add model.name property that will be used as a namespace in the json request
+  * put this code before your Backbone app code
+  * use toJSON() as usual (so there is no namespacing in your templates)
+  * your model's data will be sent under model.name key when calling save()
+  ###
 
-  # Extend Backbone.Collection to support setting a namespace
-  # for the collection and its models. Example response from server:
-  # {
-  #   'models' : {[
-  #    'model' : {
-  #     ... attributes ...
-  #   }]}
-  #
-  # We dont want the attributes to be scoped by the models root
-  # This new parse function will drop the namespace
-  # if it is defined on the collection. Example:
-  #
-  # SomeCollection = Backbone.Collection.extend({
-  #   namespace : 'myModels'
-  # });
-  _.extend Backbone.Collection.prototype
-    parse: (resp, xhr) ->
-      collection = this
-      var ns = collection.namespace
-      var result = resp
-      if(ns)
-        result = resp[ns]
+  # save reference to Backbone.sync
+  Backbone.oldSync = Backbone.sync
 
-      # Not sure how necessary this step is
-      return _.map result, (attrs) ->
-        model = new collection.model()
-        model.set model.parse(attrs)
-        model
+  # override original method
+  Backbone.sync = (method, model, options) ->
+    # save reference to original toJSON()
+    model.oldToJSON = model.toJSON
+
+    # override this model instance toJSON() method
+    model.toJSON = -> 
+      json = {}
+      # namespace original json values under model.name key
+      json[model.name] = @oldToJSON()
+      json
+    
+    # call original sync method
+    syncReturnValue = Backbone.oldSync method, model, options
+
+    # restore original toJSON() on this model instance
+    model.toJSON = model.oldToJSON
+    delete model.oldToJSON
+
+    # return value returned by original sync
+    syncReturnValue
 
   window.AppRouter = class AppRouter extends Backbone.Router
     initialize: ->
