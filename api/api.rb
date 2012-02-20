@@ -2,7 +2,7 @@ require './models/wine'
 module Acme
   class API < Grape::API
     prefix 'api'
-    version 'v1'
+    version 'v1', :using => :path
 
     resources :wines do
       desc "Returns some wines."
@@ -18,13 +18,14 @@ module Acme
       desc "Update a wine"
       put ':id' do
         wine = Wine.find(params[:id])
-        wine.update_attributes!(params.except(:route_info, :version))
+        wine.update_attributes!(params['wine'])
         wine.as_json
       end
       
       desc "Create a wine"
       post '/' do
-        wine = Wine.create!(params.except(:route_info, :version, :_id, :id))
+        puts "params: #{params}"
+        wine = Wine.create!(params['wine'])
         wine.as_json
       end
     end
